@@ -1,0 +1,334 @@
+# ============================================================
+# CINEMATCH PROJECT - EVALUATION COMMANDS (WINDOWS)
+# ============================================================
+# Complete workflow for evaluating semantic search performance
+# Compares Base TMDB vs Enriched Dataset across 3 models
+# 
+# Prerequisites:
+# - Data preprocessing completed
+# - enriched_tmdb_with_wiki.csv in /data folder
+# - All required libraries installed
+# ============================================================
+
+# ============================================================
+# STEP 1: INSTALL EVALUATION DEPENDENCIES
+# ============================================================
+# Install sentence-transformers and torch if not already installed
+
+pip install sentence-transformers
+pip install torch
+pip install scikit-learn
+
+# Verify installation
+python -c "from sentence_transformers import SentenceTransformer; print('✓ sentence-transformers installed')"
+
+# ============================================================
+# STEP 2: CREATE COMPREHENSIVE_EVALUATION.PY SCRIPT
+# ============================================================
+# This script will be created in your scripts/ folder
+# It tests:
+#   - Base TMDB dataset vs Enriched dataset
+#   - 3 different models (all-mpnet-base-v2, all-MiniLM-L6-v2, e5-small-v2)
+#   - 20 test queries
+#   - Precision@1, @3, @5, @10 metrics
+
+echo Creating comprehensive_evaluation.py script...
+
+# The script has been provided separately
+# Make sure comprehensive_evaluation.py is in your scripts/ folder
+# If you don't have it, let me know and I'll provide it
+
+# ============================================================
+# STEP 3: VERIFY THE SCRIPT EXISTS
+# ============================================================
+
+dir scripts\comprehensive_evaluation.py
+
+# If this shows "File Not Found", you need to create the script first
+# Ask for the comprehensive_evaluation.py file content
+
+# ============================================================
+# STEP 4: RUN THE EVALUATION (THIS WILL TAKE TIME)
+# ============================================================
+# Warning: This can take 15-45 minutes depending on your computer
+# - Downloads 3 AI models (first time only, ~500MB each)
+# - Tests 6 configurations (2 datasets × 3 models)
+# - Processes 20 queries × 4,809 movies each
+# 
+# Don't close the terminal while it's running!
+
+echo.
+echo ========================================
+echo RUNNING COMPREHENSIVE EVALUATION
+echo ========================================
+echo This will take 15-45 minutes...
+echo Do not close this window!
+echo.
+
+cd scripts
+python comprehensive_evaluation.py
+cd ..
+
+# ============================================================
+# STEP 5: MOVE GENERATED FILES TO RESULTS FOLDER
+# ============================================================
+# The evaluation creates 4 files in scripts/ folder
+# Move them to results/ for organization
+
+move scripts\dataset_comparison_precision.png results\
+move scripts\dataset_improvement_heatmap.png results\
+move scripts\best_configuration.png results\
+move scripts\evaluation_results.csv results\
+
+# ============================================================
+# STEP 6: VIEW EVALUATION RESULTS
+# ============================================================
+
+echo.
+echo ========================================
+echo EVALUATION COMPLETE!
+echo ========================================
+echo.
+echo Opening results folder...
+
+explorer results
+
+# Display the CSV results in terminal
+echo.
+echo Evaluation Results Summary:
+echo ========================================
+type results\evaluation_results.csv
+echo.
+
+# ============================================================
+# STEP 7: GENERATE EVALUATION SUMMARY REPORT
+# ============================================================
+
+echo.
+echo Creating evaluation summary report...
+
+cd scripts
+python -c "import pandas as pd; df = pd.read_csv('../results/evaluation_results.csv'); base_avg = df[df['dataset'] == 'Base TMDB']['P@5'].mean(); enrich_avg = df[df['dataset'] == 'Enriched']['P@5'].mean(); improvement = enrich_avg - base_avg; best = df.loc[df['P@5'].idxmax()]; print('EVALUATION SUMMARY'); print('='*80); print(f'Average Precision@5:'); print(f'  Base TMDB:    {base_avg:.1f}%%'); print(f'  Enriched:     {enrich_avg:.1f}%%'); print(f'  Improvement:  +{improvement:.1f} percentage points'); print(''); print('Best Configuration:'); print(f'  Dataset: {best[\"dataset\"]}'); print(f'  Model: {best[\"model\"]}'); print(f'  P@1: {best[\"P@1\"]:.1f}%%'); print(f'  P@3: {best[\"P@3\"]:.1f}%%'); print(f'  P@5: {best[\"P@5\"]:.1f}%%'); print(f'  P@10: {best[\"P@10\"]:.1f}%%')" > ../results/evaluation_summary.txt
+cd ..
+
+type results\evaluation_summary.txt
+
+# ============================================================
+# STEP 8: VERIFY ALL EVALUATION OUTPUTS CREATED
+# ============================================================
+
+echo.
+echo ========================================
+echo Verifying all output files...
+echo ========================================
+echo.
+
+dir results\dataset_comparison_precision.png
+dir results\dataset_improvement_heatmap.png
+dir results\best_configuration.png
+dir results\evaluation_results.csv
+dir results\evaluation_summary.txt
+
+echo.
+echo All evaluation files should be listed above.
+echo.
+
+# ============================================================
+# WHAT EACH OUTPUT FILE CONTAINS
+# ============================================================
+
+# dataset_comparison_precision.png
+#   - 4 bar charts (P@1, P@3, P@5, P@10)
+#   - Side-by-side comparison: Base TMDB vs Enriched
+#   - Shows which dataset performs better for each model
+#   - USE IN YOUR REPORT: Results & Evaluation section
+
+# dataset_improvement_heatmap.png
+#   - Color-coded heatmap showing improvement
+#   - Green = enriched better, Red = base better (unlikely)
+#   - Shows exact percentage point improvement
+#   - USE IN YOUR REPORT: Impact of Dataset Enrichment section
+
+# best_configuration.png
+#   - Bar chart showing the single best setup
+#   - Compares P@1, P@3, P@5, P@10 for best configuration
+#   - USE IN YOUR REPORT: Conclusion/Recommendations section
+
+# evaluation_results.csv
+#   - Complete table with all 6 configurations
+#   - Dataset | Model | P@1 | P@3 | P@5 | P@10
+#   - USE IN YOUR REPORT: Paste as a table in Results section
+
+# evaluation_summary.txt
+#   - Text summary of key findings
+#   - Average improvements
+#   - Best configuration details
+#   - USE IN YOUR REPORT: Copy key numbers into your write-up
+
+# ============================================================
+# INTERPRETING THE RESULTS
+# ============================================================
+
+echo.
+echo ========================================
+echo INTERPRETING THE RESULTS
+echo ========================================
+echo.
+echo Precision@K means:
+echo   "What percentage of the time was the correct movie
+echo    in the top K results?"
+echo.
+echo Example:
+echo   P@5 = 85%% means the correct movie was in the
+echo   top 5 results 85%% of the time
+echo.
+echo Higher = Better
+echo   P@1 = 60%% is good (correct movie is #1 rank 60%% of time)
+echo   P@5 = 90%% is excellent (correct movie in top 5, 90%% of time)
+echo.
+echo What to look for:
+echo   - Enriched dataset should beat Base TMDB
+echo   - Improvement should be 10-25 percentage points
+echo   - e5-small-v2 usually performs best for retrieval
+echo.
+
+# ============================================================
+# EXPECTED RESULTS (ROUGH ESTIMATES)
+# ============================================================
+
+echo ========================================
+echo EXPECTED RESULTS
+echo ========================================
+echo.
+echo Based on your 831%% plot length improvement,
+echo you should see approximately:
+echo.
+echo Base TMDB (all-mpnet-base-v2):
+echo   P@1: ~45-55%%
+echo   P@3: ~65-75%%
+echo   P@5: ~75-85%%
+echo   P@10: ~85-95%%
+echo.
+echo Enriched (all-mpnet-base-v2):
+echo   P@1: ~60-70%%  (+15-20 points)
+echo   P@3: ~80-90%%  (+15-20 points)
+echo   P@5: ~90-95%%  (+10-15 points)
+echo   P@10: ~95-100%% (+5-10 points)
+echo.
+echo If your results are lower, don't worry!
+echo The improvement (enriched vs base) is what matters.
+echo.
+
+# ============================================================
+# TROUBLESHOOTING
+# ============================================================
+
+echo ========================================
+echo TROUBLESHOOTING
+echo ========================================
+echo.
+echo If evaluation takes too long (over 1 hour):
+echo   - This is normal for first run (downloading models)
+echo   - Subsequent runs will be much faster
+echo   - Don't interrupt it, let it complete
+echo.
+echo If you get "Out of Memory" error:
+echo   - Close other programs
+echo   - Restart your computer
+echo   - Try running again
+echo.
+echo If models fail to download:
+echo   - Check your internet connection
+echo   - Models are ~500MB each
+echo   - They download to C:\Users\YourName\.cache\huggingface
+echo.
+echo If FileNotFoundError:
+echo   - Make sure enriched_tmdb_with_wiki.csv exists in data/
+echo   - Check that paths in comprehensive_evaluation.py are correct
+echo   - Run: dir data\enriched_tmdb_with_wiki.csv
+echo.
+echo If results look wrong (0%% accuracy):
+echo   - The test queries might not match movies in your dataset
+echo   - This is rare but can happen with heavily filtered data
+echo   - Check evaluation_results.csv to see specific numbers
+echo.
+
+# ============================================================
+# NEXT STEPS AFTER EVALUATION
+# ============================================================
+
+echo.
+echo ========================================
+echo NEXT STEPS
+echo ========================================
+echo.
+echo After evaluation completes:
+echo.
+echo 1. Review all 4 visualization files
+echo    - Open each PNG and understand what it shows
+echo.
+echo 2. Read evaluation_summary.txt
+echo    - Note the improvement percentage
+echo    - Identify the best model/dataset combination
+echo.
+echo 3. Prepare for your report:
+echo    - Include all 3 PNG files in Results section
+echo    - Create a table from evaluation_results.csv
+echo    - Cite the improvement numbers
+echo.
+echo 4. Update your app to use the best configuration:
+echo    - If e5-small-v2 performed best, switch to it
+echo    - Make sure app uses enriched_tmdb_with_wiki.csv
+echo.
+echo 5. Test the app yourself:
+echo    - Run: streamlit run app/app.py
+echo    - Try the test queries from evaluation
+echo    - Verify results match expectations
+echo.
+
+# ============================================================
+# QUICK RUN - ALL COMMANDS IN SEQUENCE
+# ============================================================
+
+echo.
+echo ========================================
+echo QUICK RUN - EXECUTE ALL AT ONCE
+echo ========================================
+echo.
+echo Copy this entire block to run everything:
+echo.
+echo pip install sentence-transformers torch scikit-learn ^&^& cd scripts ^&^& python comprehensive_evaluation.py ^&^& cd .. ^&^& move scripts\dataset_comparison_precision.png results\ ^&^& move scripts\dataset_improvement_heatmap.png results\ ^&^& move scripts\best_configuration.png results\ ^&^& move scripts\evaluation_results.csv results\ ^&^& cd scripts ^&^& python -c "import pandas as pd; df = pd.read_csv('../results/evaluation_results.csv'); base_avg = df[df['dataset'] == 'Base TMDB']['P@5'].mean(); enrich_avg = df[df['dataset'] == 'Enriched']['P@5'].mean(); improvement = enrich_avg - base_avg; best = df.loc[df['P@5'].idxmax()]; print('EVALUATION SUMMARY'); print('='*80); print(f'Average Precision@5:'); print(f'  Base TMDB:    {base_avg:.1f}%%'); print(f'  Enriched:     {enrich_avg:.1f}%%'); print(f'  Improvement:  +{improvement:.1f} percentage points'); print(''); print('Best Configuration:'); print(f'  Dataset: {best[\"dataset\"]}'); print(f'  Model: {best[\"model\"]}'); print(f'  P@1: {best[\"P@1\"]:.1f}%%'); print(f'  P@3: {best[\"P@3\"]:.1f}%%'); print(f'  P@5: {best[\"P@5\"]:.1f}%%'); print(f'  P@10: {best[\"P@10\"]:.1f}%%')" ^> ../results/evaluation_summary.txt ^&^& cd .. ^&^& type results\evaluation_summary.txt ^&^& explorer results
+echo.
+
+# ============================================================
+# COMPLETION CHECKLIST
+# ============================================================
+
+echo.
+echo ========================================
+echo COMPLETION CHECKLIST
+echo ========================================
+echo.
+echo After running all commands, verify:
+echo [ ] comprehensive_evaluation.py exists in scripts/
+echo [ ] Script ran without errors (may take 15-45 min)
+echo [ ] 3 PNG visualization files in results/
+echo [ ] evaluation_results.csv in results/
+echo [ ] evaluation_summary.txt in results/
+echo [ ] Enriched dataset shows improvement over Base TMDB
+echo [ ] Best configuration identified
+echo [ ] All files can be opened and viewed
+echo.
+echo If all checked, EVALUATION IS COMPLETE!
+echo.
+echo You now have all the data needed for your:
+echo   - Results section
+echo   - Evaluation section  
+echo   - Dataset enrichment analysis
+echo   - Model comparison analysis
+echo.
+echo CONGRATULATIONS! Your data analysis is done.
+echo Next: Write your project report using all these results.
+echo.
+
+pause

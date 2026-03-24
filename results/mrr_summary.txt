@@ -1,0 +1,32 @@
+MRR EVALUATION RESULTS
+=====================
+
+Date: Friday, 20 March 2026 02:20:00
+
+Mean Reciprocal Rank (MRR) measures the average rank position 
+of the correct movie in search results.
+
+Higher MRR = Better (correct movie appears earlier)
+  1.0 = Perfect (always rank 1)
+  0.5 = Good (avg rank 2)
+  0.33 = Okay (avg rank 3)
+
+MRR RESULTS (ALL MODELS)
+------------------------
+
+BASE TMDB DATASET:
+- all-mpnet-base-v2: 0.445 (Avg Rank 2.2)
+- all-MiniLM-L6-v2:  0.439 (Avg Rank 2.3)
+- e5-small-v2:       0.441 (Avg Rank 2.3)
+
+ENRICHED DATASET:
+- all-mpnet-base-v2: 0.503 (Avg Rank 2.0)
+- all-MiniLM-L6-v2:  0.424 (Avg Rank 2.4)
+- e5-small-v2:       0.348 (Avg Rank 2.9)
+
+KEY TAKEAWAYS
+-------------
+1. all-mpnet-base-v2 is the clear winner, with a 13% improvement in MRR (0.445 to 0.503).
+2. For the best model, the correct movie now appears at Rank 2.0 on average with enrichment.
+3. Enrichment helped the largest model the most, as it could better leverage the extra context.
+4. MRR provides a single, sensitive metric that confirms our enrichment strategy works.

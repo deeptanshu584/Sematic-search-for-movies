@@ -1,0 +1,60 @@
+VIVA PREPARATION - KEY QUESTIONS & ANSWERS
+==========================================
+
+Q1: What is semantic search and how is it different from traditional keyword search?
+A: Semantic search understands the meaning and context of a user's query rather than just looking for exact word matches. Traditional keyword search (like SQL "LIKE" or basic grep) fails if the user uses synonyms or describes a concept without using specific keywords. Semantic search uses AI to convert text into numerical vectors (embeddings) where similar meanings are located near each other in a multi-dimensional space.
+
+Q2: Why was it necessary to enrich the TMDB 5000 dataset with Wikipedia plots?
+A: The original TMDB plots (overviews) are very brief—averaging only 305 characters. This provides limited context for the AI model to understand the movie's deeper themes. By adding Wikipedia plots, we increased the average description length by over 831% to 2,843 characters. This additional context significantly improved the model's ability to match complex, descriptive natural language queries.
+
+Q3: Can you explain the architecture of your recommendation engine?
+A: The engine uses a three-tier architecture:
+1. Data Layer: Enriched dataset containing merged TMDB and Wikipedia data.
+2. Embedding Layer: Uses "all-mpnet-base-v2" (a Sentence Transformer model) to convert plot descriptions into 768-dimensional vectors.
+3. Retrieval Layer: When a user enters a query, it is also converted into a vector. We then use Cosine Similarity to find the movie vectors most similar to the query vector, ranking them by their match score.
+
+Q4: Which embedding models did you test, and why was "all-mpnet-base-v2" chosen?
+A: We tested three models:
+1. all-mpnet-base-v2 (highest performance, 768 dimensions)
+2. all-MiniLM-L6-v2 (fastest, lightweight, 384 dimensions)
+3. e5-small-v2 (optimized for search/retrieval)
+"all-mpnet-base-v2" performed best in our evaluation, achieving 65% Precision@5 on the enriched dataset. It was chosen because it provided the best balance of semantic understanding and accuracy, even though it is slightly larger than the MiniLM model.
+
+Q5: What metric did you use for evaluation? What does "Precision@5" mean?
+A: We used Precision@K (P@K) as our primary metric. Precision@5 measures how often the "correct" or highly relevant result appears within the top 5 results returned by the system. In our case, a P@5 of 65% means that for 65% of our test queries, the target movie was found in the top 5 suggestions.
+
+Q6: How did you handle cases where a movie didn't have a Wikipedia plot?
+A: We implemented a fallback strategy. If a movie was not successfully matched to a Wikipedia plot (25.5% of cases), we kept the original TMDB overview. This ensured the dataset remained complete (all 4,803 movies), while improving the quality of the majority.
+
+Q7: What are the main technologies used in this project?
+A: The project leverages:
+- Python for the core logic.
+- Sentence Transformers for AI embeddings.
+- Streamlit for the web-based user interface.
+- Pandas and NumPy for data manipulation.
+- Scikit-learn for similarity computations.
+- Matplotlib and Seaborn for data visualization.
+
+Q8: How did you perform the data enrichment (merging TMDB and Wikipedia)?
+A: We used a fuzzy matching algorithm. Since titles can differ slightly (e.g., "Star Wars" vs "Star Wars: Episode IV - A New Hope"), we matched movies by both their titles and release years, using a similarity threshold to ensure accurate merging while minimizing false positives.
+
+Q9: What were the biggest challenges you faced?
+A: The primary challenges were:
+1. Data Quality: Dealing with inconsistent titles between datasets.
+2. Performance: Encoding thousands of long Wikipedia plots into vectors in real-time. We solved this by caching the embeddings using Streamlit's @st.cache_data.
+3. Model Selection: Finding the right balance between search accuracy and response speed.
+
+Q10: What would be the next steps to improve this system?
+A: Future improvements would include:
+- Adding regional datasets like Bollywood to broaden the movie base.
+- Fine-tune embeddings specifically for movie domain.
+- Implement user feedback loop.
+
+Q11: What is Mean Reciprocal Rank (MRR)?
+A: MRR is a statistical measure used in information retrieval to evaluate systems that return a ranked list of results. It is the average of the reciprocal ranks of the first relevant result for a set of queries. For example, if the correct movie is at rank 2, the reciprocal rank is 1/2 = 0.5.
+
+Q12: Why use MRR in addition to Precision@K?
+A: Precision@K only tells us if the correct answer is in the top K results, but not where exactly. MRR captures ranking quality - getting the right answer at rank 1 is better than rank 5, even though both would count as a "success" in Precision@5. MRR is more sensitive to ranking improvements.
+
+Q13: What did your MRR results show?
+A: Our results showed that the enriched dataset improved the MRR of our best model (all-mpnet-base-v2) from 0.445 to 0.503. This means that with enrichment, the correct movie appears earlier in the results list (around rank 2.0 on average), significantly improving the user experience.

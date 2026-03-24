@@ -1,0 +1,2 @@
+dataset,model,MRR,P@1,P@3,P@5,P@10
+Enriched,all-MiniLM-L6-v2,0.42376678876678875,35.0,45.0,50.0,65.0

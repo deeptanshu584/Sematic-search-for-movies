@@ -1,0 +1,7 @@
+dataset,model,P@1,P@3,P@5,P@10
+Base TMDB,all-mpnet-base-v2,35.0,45.0,55.00000000000001,70.0
+Base TMDB,all-MiniLM-L6-v2,30.0,60.0,60.0,60.0
+Base TMDB,e5-small-v2,40.0,45.0,45.0,50.0
+Enriched,all-mpnet-base-v2,40.0,60.0,65.0,70.0
+Enriched,all-MiniLM-L6-v2,35.0,45.0,50.0,65.0
+Enriched,e5-small-v2,25.0,40.0,50.0,55.00000000000001

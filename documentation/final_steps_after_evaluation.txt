@@ -1,0 +1,569 @@
+# ============================================================
+# CINEMATCH PROJECT - FINAL STEPS AFTER EVALUATION (WINDOWS)
+# ============================================================
+# Complete these steps after the evaluation finishes
+# This prepares your project for submission and presentation
+# ============================================================
+
+# ============================================================
+# STEP 1: VERIFY EVALUATION COMPLETED SUCCESSFULLY
+# ============================================================
+
+echo.
+echo ========================================
+echo VERIFYING EVALUATION RESULTS
+echo ========================================
+echo.
+
+# Check all output files exist
+dir results\dataset_comparison_precision.png
+dir results\dataset_improvement_heatmap.png
+dir results\best_configuration.png
+dir results\evaluation_results.csv
+dir results\evaluation_summary.txt
+
+# View the summary
+type results\evaluation_summary.txt
+
+# If any files are missing, the evaluation didn't complete
+# You'll need to re-run: cd scripts && python comprehensive_evaluation.py && cd ..
+
+# ============================================================
+# STEP 2: OPEN AND REVIEW ALL VISUALIZATIONS
+# ============================================================
+
+echo.
+echo Opening all result visualizations...
+
+# Open all PNG files
+start results\dataset_comparison_precision.png
+timeout /t 2
+start results\dataset_improvement_heatmap.png
+timeout /t 2
+start results\best_configuration.png
+
+# Open the results folder
+explorer results
+
+# Review each chart and note:
+# - Which dataset performed better (should be Enriched)
+# - How much improvement (should be 10-25 percentage points)
+# - Which model worked best (likely e5-small-v2 or all-mpnet-base-v2)
+
+# ============================================================
+# STEP 3: IDENTIFY BEST MODEL FROM RESULTS
+# ============================================================
+
+echo.
+echo ========================================
+echo IDENTIFYING BEST CONFIGURATION
+echo ========================================
+echo.
+
+# Open the CSV to see all results
+start results\evaluation_results.csv
+
+# Look for the row with highest P@5 score
+# Note down:
+# - Best Dataset: (should be "Enriched")
+# - Best Model: (one of: all-mpnet-base-v2, all-MiniLM-L6-v2, or e5-small-v2)
+
+# Example output might show:
+# Enriched | e5-small-v2 | P@5: 95.0%
+# This means use e5-small-v2 model with enriched dataset
+
+# ============================================================
+# STEP 4: UPDATE YOUR APP TO USE BEST CONFIGURATION
+# ============================================================
+
+echo.
+echo ========================================
+echo UPDATING APP WITH BEST MODEL
+echo ========================================
+echo.
+
+# Based on your evaluation results, update app/app.py
+# 
+# If best model is all-mpnet-base-v2 (already default):
+#   - No changes needed
+#
+# If best model is e5-small-v2:
+#   - Open app/app.py
+#   - Find: model = SentenceTransformer('all-mpnet-base-v2')
+#   - Change to: model = SentenceTransformer('intfloat/e5-small-v2')
+#   - Find: query_vec = model.encode(query, ...)
+#   - Change to: query_vec = model.encode("query: " + query, ...)
+#   - Find: movie_embeddings = model.encode(texts, ...)
+#   - Change to: movie_embeddings = model.encode(["passage: " + t for t in texts], ...)
+#
+# If best model is all-MiniLM-L6-v2:
+#   - Open app/app.py
+#   - Find: model = SentenceTransformer('all-mpnet-base-v2')
+#   - Change to: model = SentenceTransformer('all-MiniLM-L6-v2')
+
+# Make sure app uses enriched dataset:
+# Open app/app.py and verify this line exists:
+#   df = pd.read_csv("../data/enriched_tmdb_with_wiki.csv")
+
+# ============================================================
+# STEP 5: TEST YOUR APP WITH UPDATED MODEL
+# ============================================================
+
+echo.
+echo ========================================
+echo TESTING UPDATED APP
+echo ========================================
+echo.
+
+# Run the app
+cd app
+streamlit run app.py
+
+# This will open in your browser
+# Test with these queries from the evaluation:
+#   "A man trapped alone on Mars trying to survive"
+#   "A cowboy toy who feels replaced by a space ranger toy"
+#   "Animated movie about emotions inside a girl's head"
+#   "Dream thieves plant ideas in people's minds"
+#
+# Verify:
+# - Correct movies appear in top results
+# - Match percentages are reasonable (50-95%)
+# - Filters work (genre, year, rating)
+# - No errors in terminal
+
+# Press Ctrl+C in terminal to stop the app when done testing
+
+cd ..
+
+# ============================================================
+# STEP 6: CREATE PROJECT SUMMARY DOCUMENT
+# ============================================================
+
+echo.
+echo ========================================
+echo CREATING PROJECT SUMMARY
+echo ========================================
+echo.
+
+# Create a summary of all your results
+echo CINEMATCH PROJECT - FINAL SUMMARY > results\project_summary.txt
+echo ====================================== >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo Date: %date% %time% >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo PROJECT OVERVIEW >> results\project_summary.txt
+echo ---------------- >> results\project_summary.txt
+echo Semantic Movie Search using AI and Natural Language Processing >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo DATASET >> results\project_summary.txt
+echo ------- >> results\project_summary.txt
+echo Base: TMDB 5000 Movies (4,809 movies) >> results\project_summary.txt
+echo Enriched: TMDB + Wikipedia Plots >> results\project_summary.txt
+echo Wikipedia Match Rate: 74.5%% (3,584/4,809) >> results\project_summary.txt
+echo Plot Length Improvement: +831.4%% (305 to 2,843 characters) >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo MODELS TESTED >> results\project_summary.txt
+echo ------------- >> results\project_summary.txt
+echo 1. all-mpnet-base-v2 >> results\project_summary.txt
+echo 2. all-MiniLM-L6-v2 >> results\project_summary.txt
+echo 3. e5-small-v2 >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo EVALUATION METRICS >> results\project_summary.txt
+echo ------------------ >> results\project_summary.txt
+echo Test Queries: 20 >> results\project_summary.txt
+echo Datasets Compared: Base TMDB vs Enriched >> results\project_summary.txt
+echo Metrics: Precision@1, @3, @5, @10 >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo [ADD YOUR ACTUAL RESULTS HERE FROM evaluation_summary.txt] >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo KEY FINDINGS >> results\project_summary.txt
+echo ------------ >> results\project_summary.txt
+echo - Enriched dataset significantly outperformed base TMDB >> results\project_summary.txt
+echo - Wikipedia plot enrichment improved accuracy by [X]%% >> results\project_summary.txt
+echo - Best configuration: [Model] + Enriched Dataset >> results\project_summary.txt
+echo - Semantic search successfully matches natural language queries >> results\project_summary.txt
+echo. >> results\project_summary.txt
+echo DELIVERABLES >> results\project_summary.txt
+echo ------------ >> results\project_summary.txt
+echo 1. Streamlit Web Application (app/app.py) >> results\project_summary.txt
+echo 2. Dataset Enrichment Pipeline (scripts/enrich_dataset.py) >> results\project_summary.txt
+echo 3. Evaluation Framework (scripts/comprehensive_evaluation.py) >> results\project_summary.txt
+echo 4. Data Quality Analysis (scripts/data_analysis.py) >> results\project_summary.txt
+echo 5. Complete Documentation and Visualizations >> results\project_summary.txt
+echo. >> results\project_summary.txt
+
+type results\project_summary.txt
+
+# ============================================================
+# STEP 7: ORGANIZE ALL FILES FOR SUBMISSION
+# ============================================================
+
+echo.
+echo ========================================
+echo ORGANIZING FILES FOR SUBMISSION
+echo ========================================
+echo.
+
+# Verify folder structure is clean
+dir /s /b
+
+# Your final structure should be:
+# CineMatch_Project/
+# ├── data/
+# │   ├── tmdb_5000_movies.csv
+# │   ├── tmdb_5000_credits.csv
+# │   ├── wiki_movie_plots_deduped.csv
+# │   └── enriched_tmdb_with_wiki.csv
+# ├── scripts/
+# │   ├── enrich_dataset.py
+# │   ├── data_analysis.py
+# │   ├── comprehensive_evaluation.py
+# │   └── show_movie_dataset.py
+# ├── app/
+# │   └── app.py
+# ├── results/
+# │   ├── [All PNG visualizations]
+# │   ├── [All TXT summaries]
+# │   └── evaluation_results.csv
+# ├── documentation/
+# │   ├── enrichment_process.txt
+# │   └── file_descriptions.txt
+# ├── requirements.txt
+# └── README.md
+
+# ============================================================
+# STEP 8: UPDATE requirements.txt
+# ============================================================
+
+echo.
+echo Creating final requirements.txt...
+
+echo streamlit > requirements.txt
+echo pandas >> requirements.txt
+echo numpy >> requirements.txt
+echo sentence-transformers >> requirements.txt
+echo torch >> requirements.txt
+echo scikit-learn >> requirements.txt
+echo matplotlib >> requirements.txt
+echo seaborn >> requirements.txt
+echo fuzzywuzzy >> requirements.txt
+echo python-Levenshtein >> requirements.txt
+
+type requirements.txt
+
+# ============================================================
+# STEP 9: CREATE README.md FOR YOUR PROJECT
+# ============================================================
+
+echo.
+echo Creating README.md...
+
+echo # CineMatch - AI-Powered Semantic Movie Search > README.md
+echo. >> README.md
+echo ## Overview >> README.md
+echo CineMatch is an intelligent movie search engine that understands natural language descriptions. >> README.md
+echo Instead of searching by title or actor, users can describe plot elements and themes. >> README.md
+echo. >> README.md
+echo ## Features >> README.md
+echo - **Semantic Search**: AI-powered natural language understanding >> README.md
+echo - **Dataset Enrichment**: Enhanced with Wikipedia plots (+831%% detail) >> README.md
+echo - **Multiple Models**: Tested 3 state-of-the-art embedding models >> README.md
+echo - **Smart Filters**: Genre, year, and rating filters >> README.md
+echo - **Hybrid Scoring**: Combines semantic + keyword matching >> README.md
+echo. >> README.md
+echo ## Quick Start >> README.md
+echo ```bash >> README.md
+echo # Install dependencies >> README.md
+echo pip install -r requirements.txt >> README.md
+echo. >> README.md
+echo # Run the application >> README.md
+echo cd app >> README.md
+echo streamlit run app.py >> README.md
+echo ``` >> README.md
+echo. >> README.md
+echo ## Project Structure >> README.md
+echo - `/data` - Raw and enriched datasets >> README.md
+echo - `/scripts` - Data preprocessing and evaluation >> README.md
+echo - `/app` - Main Streamlit application >> README.md
+echo - `/results` - Visualizations and metrics >> README.md
+echo. >> README.md
+echo ## Key Results >> README.md
+echo - **Wikipedia Enrichment**: 74.5%% match rate, 831.4%% plot length increase >> README.md
+echo - **Accuracy Improvement**: +[X]%% with enriched dataset >> README.md
+echo - **Best Model**: [Your best model from evaluation] >> README.md
+echo - **Test Performance**: [Your P@5 score]%% precision >> README.md
+echo. >> README.md
+echo ## Technologies Used >> README.md
+echo - **NLP**: Sentence Transformers (BERT-based embeddings) >> README.md
+echo - **ML**: Scikit-learn (TF-IDF, cosine similarity) >> README.md
+echo - **Framework**: Streamlit (web interface) >> README.md
+echo - **Data**: TMDB 5000 + Wikipedia Movie Plots >> README.md
+echo. >> README.md
+echo ## Author >> README.md
+echo Data Mining Lab Project - [Your Name] >> README.md
+echo. >> README.md
+
+type README.md
+
+# ============================================================
+# STEP 10: TAKE SCREENSHOTS OF YOUR APP
+# ============================================================
+
+echo.
+echo ========================================
+echo SCREENSHOTS NEEDED FOR REPORT
+echo ========================================
+echo.
+
+# Run your app again
+cd app
+streamlit run app.py
+
+# Take screenshots of:
+# 1. Homepage/Empty state
+# 2. Search results for "A man trapped on Mars"
+# 3. Filters being used (genre/year selection)
+# 4. A high match percentage result (90%+)
+# 5. Match score breakdown (if you have it)
+#
+# Save screenshots in: results/screenshots/
+# Name them: 
+#   - app_homepage.png
+#   - app_search_results.png
+#   - app_filters.png
+#   - app_high_match.png
+
+# Press Ctrl+C when done
+
+cd ..
+
+# Create screenshots folder
+mkdir results\screenshots
+
+echo.
+echo Save your app screenshots in: results\screenshots\
+echo.
+
+# ============================================================
+# STEP 11: PREPARE FOR PROJECT REPORT
+# ============================================================
+
+echo.
+echo ========================================
+echo FILES FOR YOUR PROJECT REPORT
+echo ========================================
+echo.
+
+# List all visualization files
+echo Preprocessing Section:
+dir results\missing_values.png
+dir results\genre_distribution.png
+dir results\rating_distribution.png
+dir results\year_distribution.png
+dir results\overview_length.png
+echo.
+
+echo Evaluation Section:
+dir results\dataset_comparison_precision.png
+dir results\dataset_improvement_heatmap.png
+dir results\best_configuration.png
+dir results\evaluation_results.csv
+echo.
+
+echo App Screenshots:
+dir results\screenshots\
+echo.
+
+# Copy key statistics
+echo Key Numbers for Report:
+type results\preprocessing_stats.txt
+echo.
+type results\evaluation_summary.txt
+
+# ============================================================
+# STEP 12: CREATE PRESENTATION OUTLINE
+# ============================================================
+
+echo.
+echo Creating presentation outline...
+
+echo CINEMATCH PROJECT - PRESENTATION OUTLINE > results\presentation_outline.txt
+echo ========================================== >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 1: Title Slide >> results\presentation_outline.txt
+echo - Project Name: CineMatch >> results\presentation_outline.txt
+echo - Subtitle: AI-Powered Semantic Movie Search >> results\presentation_outline.txt
+echo - Your Name, Date >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 2: Problem Statement >> results\presentation_outline.txt
+echo - Traditional search: Keyword matching (title, actor) >> results\presentation_outline.txt
+echo - Problem: Users remember plot, not exact titles >> results\presentation_outline.txt
+echo - Solution: Semantic search with natural language >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 3: Dataset >> results\presentation_outline.txt
+echo - TMDB 5000 Movies (4,809 movies) >> results\presentation_outline.txt
+echo - Enriched with Wikipedia plots >> results\presentation_outline.txt
+echo - Show: genre_distribution.png >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 4: Data Preprocessing >> results\presentation_outline.txt
+echo - Missing value handling >> results\presentation_outline.txt
+echo - Genre/keyword extraction >> results\presentation_outline.txt
+echo - Show: missing_values.png, overview_length.png >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 5: Dataset Enrichment >> results\presentation_outline.txt
+echo - Wikipedia plot matching (74.5%% success) >> results\presentation_outline.txt
+echo - 831.4%% plot length improvement >> results\presentation_outline.txt
+echo - Before/after example from data_samples.txt >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 6: Methodology >> results\presentation_outline.txt
+echo - Sentence Transformers (embedding models) >> results\presentation_outline.txt
+echo - Cosine similarity for matching >> results\presentation_outline.txt
+echo - Hybrid scoring (semantic + keywords) >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 7: Implementation >> results\presentation_outline.txt
+echo - Streamlit web application >> results\presentation_outline.txt
+echo - Show: app screenshots >> results\presentation_outline.txt
+echo - Features: filters, match percentage, real-time search >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 8: Evaluation >> results\presentation_outline.txt
+echo - 3 models tested >> results\presentation_outline.txt
+echo - Base vs Enriched comparison >> results\presentation_outline.txt
+echo - Show: dataset_comparison_precision.png >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 9: Results >> results\presentation_outline.txt
+echo - Enrichment improved accuracy by [X]%% >> results\presentation_outline.txt
+echo - Best model: [Your best model] >> results\presentation_outline.txt
+echo - Show: dataset_improvement_heatmap.png >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 10: Key Findings >> results\presentation_outline.txt
+echo - Data quality matters (831%% improvement = [X]%% accuracy gain) >> results\presentation_outline.txt
+echo - Semantic search successfully understands natural language >> results\presentation_outline.txt
+echo - Hybrid approach outperforms pure semantic >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 11: Conclusion >> results\presentation_outline.txt
+echo - Successfully built working semantic search system >> results\presentation_outline.txt
+echo - Demonstrated value of data enrichment >> results\presentation_outline.txt
+echo - Future work: Bollywood integration, user feedback loop >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+echo SLIDE 12: Demo (if time permits) >> results\presentation_outline.txt
+echo - Live demonstration of the app >> results\presentation_outline.txt
+echo. >> results\presentation_outline.txt
+
+type results\presentation_outline.txt
+
+# ============================================================
+# STEP 13: VIVA PREPARATION - KEY QUESTIONS
+# ============================================================
+
+echo.
+echo Creating viva Q&A document...
+
+echo VIVA PREPARATION - EXPECTED QUESTIONS > results\viva_preparation.txt
+echo ====================================== >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q1: What is semantic search? >> results\viva_preparation.txt
+echo A: Semantic search understands the meaning of text, not just keywords. >> results\viva_preparation.txt
+echo    It uses AI to convert text into numerical vectors (embeddings) where >> results\viva_preparation.txt
+echo    similar meanings have similar vectors. We then use cosine similarity >> results\viva_preparation.txt
+echo    to find the closest matches. >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q2: Why did you enrich the dataset with Wikipedia? >> results\viva_preparation.txt
+echo A: TMDB plots are very short (avg 305 chars). Longer descriptions give >> results\viva_preparation.txt
+echo    the AI model more context to understand the movie. We achieved 831%% >> results\viva_preparation.txt
+echo    increase in plot length, which improved accuracy by [X]%%. >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q3: How do sentence transformers work? >> results\viva_preparation.txt
+echo A: They use deep neural networks (BERT-based) to convert text into >> results\viva_preparation.txt
+echo    768-dimensional vectors. Similar meanings end up close together in >> results\viva_preparation.txt
+echo    this vector space, allowing us to measure similarity mathematically. >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q4: What is Precision@K? >> results\viva_preparation.txt
+echo A: Precision@K measures how often the correct answer appears in the >> results\viva_preparation.txt
+echo    top K results. P@5 = 90%% means 90%% of the time, the correct movie >> results\viva_preparation.txt
+echo    was in the top 5 results. Higher is better. >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q5: Why hybrid scoring instead of just semantic search? >> results\viva_preparation.txt
+echo A: Pure semantic search can miss exact keyword matches. For example, >> results\viva_preparation.txt
+echo    if someone types "horror comedy", we want to boost movies with those >> results\viva_preparation.txt
+echo    exact genres. Hybrid combines semantic understanding (70%%) with >> results\viva_preparation.txt
+echo    keyword matching (20%%) and genre boost (10%%). >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q6: Which model performed best and why? >> results\viva_preparation.txt
+echo A: [Fill in your best model]. It performed best because [explain based >> results\viva_preparation.txt
+echo    on results - e.g., "e5-small-v2 is specifically designed for >> results\viva_preparation.txt
+echo    retrieval tasks and handles longer texts better"]. >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q7: How is this project related to data mining? >> results\viva_preparation.txt
+echo A: We used multiple data mining techniques: >> results\viva_preparation.txt
+echo    - Text mining (NLP on plot descriptions) >> results\viva_preparation.txt
+echo    - Feature engineering (combining title + plot + genres) >> results\viva_preparation.txt
+echo    - Similarity metrics (cosine similarity) >> results\viva_preparation.txt
+echo    - Information retrieval (ranking search results) >> results\viva_preparation.txt
+echo    - Data enrichment (merging multiple datasets) >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q8: What challenges did you face? >> results\viva_preparation.txt
+echo A: Main challenges: >> results\viva_preparation.txt
+echo    1. Title matching between TMDB and Wikipedia (solved with fuzzy matching) >> results\viva_preparation.txt
+echo    2. Handling missing data (solved with fallback strategy) >> results\viva_preparation.txt
+echo    3. Balancing semantic vs keyword matching (solved with hybrid approach) >> results\viva_preparation.txt
+echo    4. Model selection (solved through comprehensive evaluation) >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q9: What would you improve in future work? >> results\viva_preparation.txt
+echo A: Future improvements: >> results\viva_preparation.txt
+echo    - Integrate Bollywood dataset for regional movies >> results\viva_preparation.txt
+echo    - Add user feedback loop (learn from which results users click) >> results\viva_preparation.txt
+echo    - Fine-tune embeddings specifically for movie domain >> results\viva_preparation.txt
+echo    - Add image-based search (upload movie poster, find similar) >> results\viva_preparation.txt
+echo    - Implement caching for faster repeated searches >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+echo Q10: Can you explain the architecture? >> results\viva_preparation.txt
+echo A: Three-tier architecture: >> results\viva_preparation.txt
+echo    1. Data Layer: Enriched dataset with preprocessed text >> results\viva_preparation.txt
+echo    2. Model Layer: Sentence transformer for embeddings + similarity >> results\viva_preparation.txt
+echo    3. Application Layer: Streamlit UI with filters and ranking >> results\viva_preparation.txt
+echo. >> results\viva_preparation.txt
+
+type results\viva_preparation.txt
+
+# ============================================================
+# COMPLETION CHECKLIST
+# ============================================================
+
+echo.
+echo ========================================
+echo FINAL PROJECT CHECKLIST
+echo ========================================
+echo.
+echo [ ] Evaluation completed successfully
+echo [ ] Best model identified from results
+echo [ ] App updated with best configuration
+echo [ ] App tested and working
+echo [ ] All visualizations generated and saved
+echo [ ] Screenshots taken
+echo [ ] README.md created
+echo [ ] requirements.txt updated
+echo [ ] Project summary written
+echo [ ] Presentation outline created
+echo [ ] Viva preparation questions ready
+echo [ ] All files organized in correct folders
+echo [ ] Code is clean and commented
+echo.
+echo If all checked, YOUR PROJECT IS COMPLETE!
+echo.
+echo ========================================
+echo NEXT STEPS
+echo ========================================
+echo.
+echo 1. Write your project report using all the visualizations
+echo 2. Create presentation slides (10-12 slides)
+echo 3. Practice your demo
+echo 4. Review viva questions
+echo 5. Submit all files to your teacher
+echo.
+echo CONGRATULATIONS! 🎉
+echo Your CineMatch project is ready for submission!
+echo ========================================
+echo.
+
+pause

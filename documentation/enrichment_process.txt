@@ -1,0 +1,33 @@
+How 'enriched_tmdb_with_wiki' was created from TMDB and Wikipedia datasets:
+
+1.  **Source Datasets**:
+    - **TMDB Movies**: `tmdb_5000_movies.csv` (contains core movie metadata like budget, genres, overview, popularity, release date, revenue, etc.).
+    - **TMDB Credits**: `tmdb_5000_credits.csv` (contains 'cast' and 'crew' details).
+    - **Wikipedia Plots**: `wiki_movie_plots_deduped.csv` (sourced from a separate directory, contains long-form plot summaries).
+
+2.  **Merging TMDB Data**:
+    - The `tmdb_5000_movies.csv` and `tmdb_5000_credits.csv` datasets were first merged on the `title` column to consolidate all available TMDB information into a single dataframe.
+
+3.  **Data Preparation for Matching**:
+    - **Year Extraction**: In the TMDB dataset, the `release_year` was extracted from the `release_date` column.
+    - **Title Normalization**: In both the TMDB and Wikipedia datasets, movie titles were cleaned (converted to lowercase and stripped of extra whitespace) to create a `Title_Clean` column for reliable matching.
+
+4.  **Enrichment (The Wikipedia Join)**:
+    - A **left join** was performed, merging the TMDB dataframe with the Wikipedia plots. 
+    - The matching was based on two keys: **`Title_Clean`** and **`release_year`**. 
+    - A left join ensured that all original TMDB movies were kept, even if a corresponding plot wasn't found in the Wikipedia dataset.
+
+5.  **Handling Missing Data**:
+    - A new column `detailed_plot` was created.
+    - If a Wikipedia plot was successfully matched, it was used.
+    - If no Wikipedia plot existed, the original TMDB `overview` was used as a fallback.
+    - This ensured that every movie had the most detailed description possible.
+
+6.  **Feature Engineering ('Soup' Creation)**:
+    - For recommendation or search purposes, a metadata 'soup' was constructed.
+    - **Genre, Keywords, Cast (Top 3), and Director** were extracted from their JSON-like formats in the original columns.
+    - These strings were cleaned (lowercased and spaces removed) to ensure that, for example, "Johnny Depp" and "Johnny Galecki" would be distinct tokens ("johnnydepp" vs "johnnygalecki").
+    - All these metadata tokens were joined with the `detailed_plot` to create a final `soup` column.
+
+7.  **Output**:
+    - The final processed dataset was saved as `enriched_tmdb_with_wiki.csv`.

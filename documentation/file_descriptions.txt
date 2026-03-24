@@ -1,0 +1,17 @@
+Overview of files in the 'Movies Dataset' project:
+
+1.  **app/app.py**: The main Streamlit application. It uses a high-accuracy 'sentence-t5-large' bi-encoder and a MiniLM-L-12 cross-encoder to perform semantic search on movie overviews.
+2.  **app_ui_backup.py**: A backup version of the Streamlit UI script, preserving previous UI designs or experimental features.
+3.  **Bollywood_movies_github.csv**: A dataset specifically containing Bollywood movie information, potentially used for expanded search capabilities or specific regional analysis.
+4.  **enrich_dataset.py**: A script designed to merge TMDB movie data with long-form plot summaries from Wikipedia. It creates a 'detailed_plot' column (falling back to TMDB overview if Wiki plot is missing) and a 'soup' column containing a combination of genres, keywords, cast, and director for searching.
+5.  **enriched_tmdb_with_wiki.csv**: The large output file from 'enrich_dataset.py'. It contains the full TMDB metadata enriched with Wikipedia plot summaries and the pre-computed 'soup' column for search indexing.
+6.  **enrichment_process.txt**: A documentation file explaining the step-by-step logic used in 'enrich_dataset.py' to combine the TMDB and Wikipedia datasets.
+7.  **preprocess_data.py**: A standalone preprocessing script that merges the base TMDB movies and credits files. It extracts and cleans features like genres, keywords, cast (top 3), and directors to create a consolidated 'soup' column for traditional keyword-based recommendation systems.
+8.  **processed_movies.csv**: The output of 'preprocess_data.py'. It is a consolidated version of the TMDB dataset with all key features flattened and cleaned, ready for use in a recommendation or search model.
+9.  **requirements.txt**: The list of Python libraries needed to run the project, including 'streamlit', 'pandas', 'sentence-transformers', and 'torch'.
+10. **show_movie_dataset.py**: A utility script used to quickly inspect the 'tmdb_5000_movies.csv' file. It prints a clean, formatted table of the first few movie titles and their plot summaries.
+11. **tmdb_5000_credits.csv**: The raw credits dataset from TMDB, containing cast and crew information (including directors) stored in JSON format.
+12. **tmdb_5000_movies.csv**: The raw movie metadata dataset from TMDB, containing core information like titles, budgets, genres, overviews, and ratings.
+13. **download_large_models.py**: Script to pre-download the ~1.1GB T5-large and re-ranker models.
+14. **maximum_accuracy_large_instructions.txt**: Guide for configuring the project for maximum accuracy using the T5-large model.
+15. **scripts/ultimate_accuracy_evaluation.py**: Script to evaluate the system's performance using the T5-large and cross-encoder models.

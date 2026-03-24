@@ -1,0 +1,334 @@
+# ============================================================
+# CINEMATCH PROJECT - UPDATE FILE PATHS AFTER REORGANIZATION
+# ============================================================
+# After moving files into folders, you need to update paths in your code
+# These commands will show you what to change in each file
+# ============================================================
+
+# ============================================================
+# IMPORTANT: READ THIS FIRST
+# ============================================================
+# 
+# You need to manually edit these Python files:
+# 1. app/app.py
+# 2. scripts/enrich_dataset.py
+# 3. scripts/data_analysis.py (if you have it)
+# 4. scripts/preprocess_data.py
+# 5. scripts/show_movie_dataset.py
+# 
+# Open each file in a text editor (Notepad, VS Code, etc.)
+# and make the changes listed below
+# 
+# OR use the PowerShell commands at the end to do it automatically
+# ============================================================
+
+# ============================================================
+# FILE 1: app/app.py
+# ============================================================
+
+echo.
+echo ========================================
+echo FILE: app/app.py
+echo ========================================
+echo.
+echo FIND THIS:
+echo     df = pd.read_csv("tmdb_5000_movies.csv")
+echo OR:
+echo     df = pd.read_csv("enriched_tmdb_with_wiki.csv")
+echo OR:
+echo     df = pd.read_csv("processed_movies.csv")
+echo.
+echo REPLACE WITH:
+echo     df = pd.read_csv("../data/enriched_tmdb_with_wiki.csv")
+echo.
+echo ----------------------------------------
+echo.
+
+# ============================================================
+# FILE 2: scripts/enrich_dataset.py
+# ============================================================
+
+echo ========================================
+echo FILE: scripts/enrich_dataset.py
+echo ========================================
+echo.
+echo FIND:
+echo     tmdb_movies = pd.read_csv("tmdb_5000_movies.csv")
+echo REPLACE WITH:
+echo     tmdb_movies = pd.read_csv("../data/tmdb_5000_movies.csv")
+echo.
+echo FIND:
+echo     tmdb_credits = pd.read_csv("tmdb_5000_credits.csv")
+echo REPLACE WITH:
+echo     tmdb_credits = pd.read_csv("../data/tmdb_5000_credits.csv")
+echo.
+echo FIND:
+echo     wiki_plots = pd.read_csv("wiki_movie_plots_deduped.csv")
+echo REPLACE WITH:
+echo     wiki_plots = pd.read_csv("../data/wiki_movie_plots_deduped.csv")
+echo.
+echo FIND:
+echo     output_file = "enriched_tmdb_with_wiki.csv"
+echo OR:
+echo     df.to_csv("enriched_tmdb_with_wiki.csv", index=False)
+echo REPLACE WITH:
+echo     output_file = "../data/enriched_tmdb_with_wiki.csv"
+echo OR:
+echo     df.to_csv("../data/enriched_tmdb_with_wiki.csv", index=False)
+echo.
+echo ----------------------------------------
+echo.
+
+# ============================================================
+# FILE 3: scripts/data_analysis.py
+# ============================================================
+
+echo ========================================
+echo FILE: scripts/data_analysis.py
+echo ========================================
+echo.
+echo FIND:
+echo     df = pd.read_csv("tmdb_5000_movies.csv")
+echo REPLACE WITH:
+echo     df = pd.read_csv("../data/tmdb_5000_movies.csv")
+echo.
+echo FIND:
+echo     plt.savefig('missing_values.png', dpi=300, bbox_inches='tight')
+echo REPLACE WITH:
+echo     plt.savefig('../results/missing_values.png', dpi=300, bbox_inches='tight')
+echo.
+echo NOTE: Do this for ALL plt.savefig() lines:
+echo   - genre_distribution.png
+echo   - rating_distribution.png
+echo   - year_distribution.png
+echo   - overview_length.png
+echo.
+echo ----------------------------------------
+echo.
+
+# ============================================================
+# FILE 4: scripts/preprocess_data.py
+# ============================================================
+
+echo ========================================
+echo FILE: scripts/preprocess_data.py
+echo ========================================
+echo.
+echo FIND:
+echo     df = pd.read_csv("tmdb_5000_movies.csv")
+echo REPLACE WITH:
+echo     df = pd.read_csv("../data/tmdb_5000_movies.csv")
+echo.
+echo FIND:
+echo     credits = pd.read_csv("tmdb_5000_credits.csv")
+echo REPLACE WITH:
+echo     credits = pd.read_csv("../data/tmdb_5000_credits.csv")
+echo.
+echo FIND:
+echo     df.to_csv("processed_movies.csv", index=False)
+echo REPLACE WITH:
+echo     df.to_csv("../data/processed_movies.csv", index=False)
+echo.
+echo ----------------------------------------
+echo.
+
+# ============================================================
+# FILE 5: scripts/show_movie_dataset.py
+# ============================================================
+
+echo ========================================
+echo FILE: scripts/show_movie_dataset.py
+echo ========================================
+echo.
+echo FIND:
+echo     df = pd.read_csv("tmdb_5000_movies.csv")
+echo REPLACE WITH:
+echo     df = pd.read_csv("../data/tmdb_5000_movies.csv")
+echo.
+echo ----------------------------------------
+echo.
+
+# ============================================================
+# FILE 6: scripts/comprehensive_evaluation.py (if you have it)
+# ============================================================
+
+echo ========================================
+echo FILE: scripts/comprehensive_evaluation.py
+echo ========================================
+echo.
+echo FIND:
+echo     df_base = pd.read_csv("tmdb_5000_movies.csv")
+echo REPLACE WITH:
+echo     df_base = pd.read_csv("../data/tmdb_5000_movies.csv")
+echo.
+echo FIND:
+echo     df_enriched = pd.read_csv("enriched_tmdb_with_wiki.csv")
+echo REPLACE WITH:
+echo     df_enriched = pd.read_csv("../data/enriched_tmdb_with_wiki.csv")
+echo.
+echo FIND ALL plt.savefig() lines and update paths:
+echo     plt.savefig('model_comparison.png', ...)
+echo REPLACE WITH:
+echo     plt.savefig('../results/model_comparison.png', ...)
+echo.
+echo Do this for all output PNG and CSV files
+echo.
+echo ----------------------------------------
+echo.
+
+# ============================================================
+# AUTOMATIC UPDATE USING POWERSHELL (ADVANCED)
+# ============================================================
+# 
+# WARNING: This will automatically modify your files
+# Make a backup first!
+# 
+# To run these, open PowerShell (not Command Prompt) and navigate
+# to your project root, then paste these commands:
+# ============================================================
+
+echo.
+echo ========================================
+echo AUTOMATIC UPDATE COMMANDS (PowerShell)
+echo ========================================
+echo.
+echo # Update app/app.py
+echo (Get-Content app\app.py) -replace 'pd\.read_csv\("tmdb_5000_movies\.csv"\)', 'pd.read_csv("../data/tmdb_5000_movies.csv")' -replace 'pd\.read_csv\("enriched_tmdb_with_wiki\.csv"\)', 'pd.read_csv("../data/enriched_tmdb_with_wiki.csv")' -replace 'pd\.read_csv\("processed_movies\.csv"\)', 'pd.read_csv("../data/processed_movies.csv")' ^| Set-Content app\app.py
+echo.
+echo # Update scripts/enrich_dataset.py
+echo (Get-Content scripts\enrich_dataset.py) -replace 'pd\.read_csv\("tmdb_5000_movies\.csv"\)', 'pd.read_csv("../data/tmdb_5000_movies.csv")' -replace 'pd\.read_csv\("tmdb_5000_credits\.csv"\)', 'pd.read_csv("../data/tmdb_5000_credits.csv")' -replace 'pd\.read_csv\("wiki_movie_plots_deduped\.csv"\)', 'pd.read_csv("../data/wiki_movie_plots_deduped.csv")' -replace 'to_csv\("enriched_tmdb_with_wiki\.csv"', 'to_csv("../data/enriched_tmdb_with_wiki.csv"' ^| Set-Content scripts\enrich_dataset.py
+echo.
+echo # Update scripts/data_analysis.py
+echo (Get-Content scripts\data_analysis.py) -replace 'pd\.read_csv\("tmdb_5000_movies\.csv"\)', 'pd.read_csv("../data/tmdb_5000_movies.csv")' -replace 'plt\.savefig\(''(.*?)\.png''', 'plt.savefig(''../results/$1.png''' ^| Set-Content scripts\data_analysis.py
+echo.
+echo # Update scripts/preprocess_data.py
+echo (Get-Content scripts\preprocess_data.py) -replace 'pd\.read_csv\("tmdb_5000_movies\.csv"\)', 'pd.read_csv("../data/tmdb_5000_movies.csv")' -replace 'pd\.read_csv\("tmdb_5000_credits\.csv"\)', 'pd.read_csv("../data/tmdb_5000_credits.csv")' -replace 'to_csv\("processed_movies\.csv"', 'to_csv("../data/processed_movies.csv"' ^| Set-Content scripts\preprocess_data.py
+echo.
+echo # Update scripts/show_movie_dataset.py
+echo (Get-Content scripts\show_movie_dataset.py) -replace 'pd\.read_csv\("tmdb_5000_movies\.csv"\)', 'pd.read_csv("../data/tmdb_5000_movies.csv")' ^| Set-Content scripts\show_movie_dataset.py
+echo.
+
+# ============================================================
+# MANUAL EDITING (RECOMMENDED)
+# ============================================================
+# 
+# I recommend doing this MANUALLY for safety:
+# 
+# 1. Open app/app.py in Notepad or VS Code
+# 2. Press Ctrl+H (Find and Replace)
+# 3. Find: "tmdb_5000_movies.csv"
+#    Replace: "../data/tmdb_5000_movies.csv"
+# 4. Click "Replace All"
+# 5. Find: "enriched_tmdb_with_wiki.csv"
+#    Replace: "../data/enriched_tmdb_with_wiki.csv"
+# 6. Click "Replace All"
+# 7. Save the file
+# 
+# Repeat for each script in /scripts folder
+# 
+# ============================================================
+
+# ============================================================
+# VERIFY CHANGES WORKED
+# ============================================================
+
+echo.
+echo ========================================
+echo TESTING UPDATED PATHS
+echo ========================================
+echo.
+echo After making changes, test each script:
+echo.
+echo 1. Test app:
+echo    cd app
+echo    streamlit run app.py
+echo    (Should load without FileNotFoundError)
+echo.
+echo 2. Test data analysis:
+echo    cd scripts
+echo    python data_analysis.py
+echo    (Should create PNGs in ../results/)
+echo.
+echo 3. Test enrichment:
+echo    cd scripts
+echo    python enrich_dataset.py
+echo    (Should create CSV in ../data/)
+echo.
+echo If any fail with "FileNotFoundError", the paths are still wrong
+echo.
+
+# ============================================================
+# QUICK REFERENCE - WHAT PATHS SHOULD LOOK LIKE
+# ============================================================
+
+echo.
+echo ========================================
+echo CORRECT PATH EXAMPLES
+echo ========================================
+echo.
+echo In app/app.py:
+echo   pd.read_csv("../data/enriched_tmdb_with_wiki.csv")
+echo.
+echo In scripts/enrich_dataset.py:
+echo   pd.read_csv("../data/tmdb_5000_movies.csv")
+echo   pd.read_csv("../data/tmdb_5000_credits.csv")
+echo   pd.read_csv("../data/wiki_movie_plots_deduped.csv")
+echo   df.to_csv("../data/enriched_tmdb_with_wiki.csv")
+echo.
+echo In scripts/data_analysis.py:
+echo   pd.read_csv("../data/tmdb_5000_movies.csv")
+echo   plt.savefig('../results/missing_values.png')
+echo   plt.savefig('../results/genre_distribution.png')
+echo.
+echo The pattern:
+echo   - Scripts in /app → use ../data/ to go up and into data
+echo   - Scripts in /scripts → use ../data/ and ../results/
+echo   - All outputs go to /data or /results
+echo.
+
+# ============================================================
+# COMPLETION CHECKLIST
+# ============================================================
+
+echo.
+echo ========================================
+echo CHECKLIST
+echo ========================================
+echo.
+echo After updating paths, verify:
+echo [ ] app/app.py reads from ../data/
+echo [ ] scripts/enrich_dataset.py reads from ../data/ and writes to ../data/
+echo [ ] scripts/data_analysis.py reads from ../data/ and writes to ../results/
+echo [ ] All scripts run without FileNotFoundError
+echo [ ] App launches successfully: streamlit run app/app.py
+echo.
+echo If all checked, PATH UPDATES COMPLETE!
+echo.
+
+# ============================================================
+# SUMMARY
+# ============================================================
+
+echo.
+echo ========================================
+echo SUMMARY
+echo ========================================
+echo.
+echo The key change is adding "../data/" or "../results/" before filenames
+echo because your scripts are now in subfolders.
+echo.
+echo "../" means "go up one folder level"
+echo.
+echo Example:
+echo   scripts/enrich_dataset.py wants data/tmdb_5000_movies.csv
+echo   Current location: scripts/
+echo   Target location: data/
+echo   Solution: ../data/tmdb_5000_movies.csv
+echo   (go up to root, then into data folder)
+echo.
+echo You can either:
+echo   1. Edit each file manually (safer, recommended)
+echo   2. Use PowerShell commands (faster, but backup first)
+echo.
+
+pause

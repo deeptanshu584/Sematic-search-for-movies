@@ -1,0 +1,239 @@
+# ============================================================
+# CINEMATCH PROJECT - FOLDER ORGANIZATION SCRIPT
+# ============================================================
+# Instructions for organizing your project folder structure
+# Run these commands in order from your project root directory
+# 
+# IMPORTANT: Review each section before running
+# These commands will MOVE files, not delete them
+# ============================================================
+
+# ============================================================
+# STEP 1: CREATE FOLDER STRUCTURE
+# ============================================================
+# Create all necessary subdirectories
+
+mkdir data
+mkdir scripts
+mkdir app
+mkdir results
+mkdir documentation
+mkdir backups
+mkdir future_features
+
+# ============================================================
+# STEP 2: MOVE DATASETS TO /data
+# ============================================================
+# Move all CSV datasets into the data folder
+
+move tmdb_5000_movies.csv data/
+move tmdb_5000_credits.csv data/
+move enriched_tmdb_with_wiki.csv data/
+move processed_movies.csv data/
+
+# Move Bollywood dataset to future_features (for later use)
+move Bollywood_movies_github.csv future_features/
+
+# If you have Wikipedia plots dataset, move it too:
+# move wiki_movie_plots_deduped.csv data/
+
+# ============================================================
+# STEP 3: MOVE SCRIPTS TO /scripts
+# ============================================================
+# Move all preprocessing and utility scripts
+
+move enrich_dataset.py scripts/
+move preprocess_data.py scripts/
+move show_movie_dataset.py scripts/
+
+# Move evaluation scripts (if you have them)
+# move data_analysis.py scripts/
+# move comprehensive_evaluation.py scripts/
+# move evaluate_model.py scripts/
+
+# ============================================================
+# STEP 4: MOVE MAIN APP TO /app
+# ============================================================
+# Move the main application file
+
+move app.py app/
+
+# ============================================================
+# STEP 5: MOVE BACKUP FILES TO /backups
+# ============================================================
+# Move old/backup versions to keep them but out of the way
+
+move app_ui_backup.py backups/
+
+# If you have other backup files, move them too:
+# move old_app.py backups/
+# move test_app.py backups/
+
+# ============================================================
+# STEP 6: MOVE DOCUMENTATION TO /documentation
+# ============================================================
+# Move all text documentation files
+
+move enrichment_process.txt documentation/
+move file_descriptions.txt documentation/
+
+# ============================================================
+# STEP 7: MOVE RESULTS/VISUALIZATIONS TO /results
+# ============================================================
+# If you've already generated any PNG files or CSV results, move them
+
+# move missing_values.png results/
+# move genre_distribution.png results/
+# move rating_distribution.png results/
+# move year_distribution.png results/
+# move overview_length.png results/
+# move model_comparison.png results/
+# move precision_at_k.png results/
+# move score_distribution.png results/
+# move dataset_comparison_precision.png results/
+# move dataset_improvement_heatmap.png results/
+# move best_configuration.png results/
+# move evaluation_results.csv results/
+
+# ============================================================
+# STEP 8: KEEP THESE IN ROOT
+# ============================================================
+# These files should stay in the project root directory
+# - requirements.txt (already in root)
+# - README.md (create this if you haven't)
+# - .gitignore (if using Git)
+
+# ============================================================
+# STEP 9: UPDATE FILE PATHS IN YOUR CODE
+# ============================================================
+# IMPORTANT: After moving files, you need to update paths in your code
+# 
+# In app/app.py, change:
+#   FROM: df = pd.read_csv("enriched_tmdb_with_wiki.csv")
+#   TO:   df = pd.read_csv("../data/enriched_tmdb_with_wiki.csv")
+#
+# In scripts/enrich_dataset.py, change:
+#   FROM: tmdb_movies = pd.read_csv("tmdb_5000_movies.csv")
+#   TO:   tmdb_movies = pd.read_csv("../data/tmdb_5000_movies.csv")
+#
+# And update output paths:
+#   FROM: output_file = "enriched_tmdb_with_wiki.csv"
+#   TO:   output_file = "../data/enriched_tmdb_with_wiki.csv"
+#
+# Do similar updates for all scripts in /scripts folder
+
+# ============================================================
+# STEP 10: CREATE A NOTE FILE IN future_features
+# ============================================================
+# Create a reminder about the Bollywood dataset
+
+echo "Bollywood Movies Dataset - For Future Integration" > future_features/README.txt
+echo "" >> future_features/README.txt
+echo "This dataset contains Bollywood movie information." >> future_features/README.txt
+echo "Planned features:" >> future_features/README.txt
+echo "- Expand search to include Bollywood movies" >> future_features/README.txt
+echo "- Regional language support" >> future_features/README.txt
+echo "- Cross-cultural movie recommendations" >> future_features/README.txt
+
+# ============================================================
+# STEP 11: VERIFY ORGANIZATION
+# ============================================================
+# List all directories to verify structure
+
+echo "Verifying folder structure..."
+dir /s /b
+
+# Your final structure should look like:
+#
+# CineMatch_Project/
+# ├── data/
+# │   ├── tmdb_5000_movies.csv
+# │   ├── tmdb_5000_credits.csv
+# │   ├── enriched_tmdb_with_wiki.csv
+# │   └── processed_movies.csv
+# ├── scripts/
+# │   ├── enrich_dataset.py
+# │   ├── preprocess_data.py
+# │   ├── show_movie_dataset.py
+# │   ├── data_analysis.py (if added)
+# │   └── comprehensive_evaluation.py (if added)
+# ├── app/
+# │   └── app.py
+# ├── results/
+# │   └── (PNG and CSV files after running evaluations)
+# ├── documentation/
+# │   ├── enrichment_process.txt
+# │   └── file_descriptions.txt
+# ├── backups/
+# │   └── app_ui_backup.py
+# ├── future_features/
+# │   ├── Bollywood_movies_github.csv
+# │   └── README.txt
+# ├── requirements.txt
+# └── README.md (create this)
+
+# ============================================================
+# STEP 12: UPDATE requirements.txt (if needed)
+# ============================================================
+# Make sure requirements.txt includes all dependencies:
+#
+# streamlit
+# pandas
+# sentence-transformers
+# torch
+# scikit-learn
+# matplotlib
+# seaborn
+# fuzzywuzzy
+# python-Levenshtein
+
+# ============================================================
+# STEP 13: TEST THAT EVERYTHING STILL WORKS
+# ============================================================
+# After organizing, test your app from project root:
+
+cd app
+streamlit run app.py
+
+# If you get file path errors, you need to update the paths
+# in your code as mentioned in STEP 9
+
+# ============================================================
+# OPTIONAL: CREATE README.md
+# ============================================================
+# Create a README.md file in your project root to explain everything
+# (Run this as a separate command or create manually)
+
+# ============================================================
+# NOTES FOR WINDOWS vs LINUX/MAC
+# ============================================================
+# 
+# If you're on LINUX or MAC, replace:
+#   - "move" with "mv"
+#   - "dir" with "ls -la"
+#   - "echo ... >" with "echo '...' >"
+#
+# Example for Linux/Mac:
+#   mkdir data
+#   mv tmdb_5000_movies.csv data/
+#   mv tmdb_5000_credits.csv data/
+#   etc.
+
+# ============================================================
+# FINAL CHECKLIST
+# ============================================================
+# After running all commands, verify:
+# 
+# ✓ All datasets are in /data
+# ✓ All scripts are in /scripts
+# ✓ Main app is in /app
+# ✓ Documentation is in /documentation
+# ✓ Backups are in /backups
+# ✓ Bollywood dataset is safely in /future_features
+# ✓ requirements.txt is in root
+# ✓ File paths in code are updated
+# ✓ App still runs: streamlit run app/app.py
+# 
+# ============================================================
+# YOU'RE DONE!
+# ============================================================

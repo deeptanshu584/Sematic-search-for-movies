@@ -1,0 +1,62 @@
+CINEMATCH PROJECT - PRESENTATION OUTLINE
+==========================================
+
+SLIDE 1: Title Slide
+- Project Name: CineMatch
+- Subtitle: AI-Powered Semantic Movie Search
+- Author: CineMatch Team, Date: March 19, 2026
+
+SLIDE 2: Problem Statement
+- Traditional search: Limited to keyword matching (titles, actors).
+- Problem: Users often remember plot points or themes but not exact titles.
+- Solution: Semantic search using Natural Language Processing (NLP).
+
+SLIDE 3: Datasets
+- Primary Source: TMDB 5000 Movies.
+- Enrichment Source: Wikipedia Movie Plots (34k+ plots).
+- Challenge: Merging datasets with different formats and naming conventions.
+
+SLIDE 4: Data Preprocessing
+- Cleaned missing values and inconsistent formatting.
+- Extracted genre, year, and rating features.
+- Visualized dataset distributions (results/genre_distribution.png).
+
+SLIDE 5: Dataset Enrichment Pipeline
+- Used fuzzy matching to link TMDB movies to Wikipedia plots.
+- Result: 74.5% match rate.
+- Impact: Increased average plot length by 831.4% (more context for AI).
+
+SLIDE 6: Methodology
+- Technology: Sentence Transformers (BERT/MPNet/MiniLM).
+- Metric: Cosine similarity for matching queries to movie embeddings.
+- Scoring: Real-time semantic similarity computation.
+
+SLIDE 7: Web Application (UI/UX)
+- Framework: Streamlit.
+- Features: Real-time search, multi-genre filters, year & rating sliders.
+- Design: Cinematic dark mode with match percentage indicators.
+
+SLIDE 8: Evaluation Framework
+- Methodology: Precision@K using 20 test queries across 6 configurations.
+- Models tested: all-mpnet-base-v2, all-MiniLM-L6-v2, e5-small-v2.
+- Comparison: Base TMDB vs. Enriched Dataset.
+
+SLIDE 9: Results & Key Findings
+- Top Performance: all-mpnet-base-v2 on Enriched Dataset.
+- Improvement: +10 percentage points in P@5 accuracy through enrichment.
+- Visualization: results/dataset_comparison_precision.png.
+
+SLIDE 10: Best Configuration Spotlight
+- Dataset: Enriched
+- Model: all-mpnet-base-v2
+- P@5: 65.0%, P@10: 70.0%
+
+SLIDE 11: Future Enhancements
+- Integration with Bollywood and regional datasets.
+- User feedback loop for continuous model improvement.
+- Image-based search (posters) using multi-modal models.
+
+SLIDE 12: Demo & Conclusion
+- Live app demonstration.
+- Final thoughts on the value of data enrichment in semantic search.
+- Q&A.

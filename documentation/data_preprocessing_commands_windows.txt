@@ -1,0 +1,227 @@
+# ============================================================
+# CINEMATCH PROJECT - DATA PREPROCESSING COMMANDS (WINDOWS)
+# ============================================================
+# Complete workflow for data preprocessing and analysis
+# Run these commands in order from your project root directory
+# 
+# Prerequisites:
+# - Python installed
+# - All datasets in /data folder (including wiki_movie_plots_deduped.csv)
+# - All scripts in /scripts folder
+# ============================================================
+
+# ============================================================
+# STEP 1: INSTALL REQUIRED LIBRARIES
+# ============================================================
+
+pip install pandas
+pip install numpy
+pip install matplotlib
+pip install seaborn
+pip install scikit-learn
+pip install fuzzywuzzy
+pip install python-Levenshtein
+
+# Or install everything from requirements.txt:
+pip install -r requirements.txt
+
+# ============================================================
+# STEP 2: VERIFY DATA FILES EXIST
+# ============================================================
+
+dir data\tmdb_5000_movies.csv
+dir data\tmdb_5000_credits.csv
+dir data\wiki_movie_plots_deduped.csv
+
+# All three files should be listed
+# If any are missing, stop and add them to /data folder
+
+# ============================================================
+# STEP 3: RUN BASIC DATA ANALYSIS
+# ============================================================
+# Generates visualizations: missing_values.png, genre_distribution.png, 
+# rating_distribution.png, year_distribution.png, overview_length.png
+
+cd scripts
+python data_analysis.py
+cd ..
+
+# Move generated PNG files to results folder:
+move scripts\missing_values.png results\
+move scripts\genre_distribution.png results\
+move scripts\rating_distribution.png results\
+move scripts\year_distribution.png results\
+move scripts\overview_length.png results\
+
+# ============================================================
+# STEP 4: RUN DATASET ENRICHMENT (TMDB + Wikipedia)
+# ============================================================
+# This merges TMDB with Wikipedia plots for better descriptions
+
+cd scripts
+python enrich_dataset.py
+cd ..
+
+# This will create the enriched dataset
+# Move it to the data folder:
+move scripts\enriched_tmdb_with_wiki.csv data\
+
+# ============================================================
+# STEP 5: VERIFY ENRICHED DATASET
+# ============================================================
+
+dir data\enriched_tmdb_with_wiki.csv
+
+# Should show the file with size (should be larger than original)
+
+# Quick check - view first few rows:
+cd scripts
+python show_movie_dataset.py
+cd ..
+
+# ============================================================
+# STEP 6: GENERATE PREPROCESSING SUMMARY REPORT
+# ============================================================
+
+echo DATA PREPROCESSING SUMMARY > results\preprocessing_summary.txt
+echo ========================= >> results\preprocessing_summary.txt
+echo. >> results\preprocessing_summary.txt
+echo Date: %date% %time% >> results\preprocessing_summary.txt
+echo. >> results\preprocessing_summary.txt
+echo Steps Completed: >> results\preprocessing_summary.txt
+echo 1. Analyzed base TMDB dataset >> results\preprocessing_summary.txt
+echo 2. Generated data quality visualizations >> results\preprocessing_summary.txt
+echo 3. Enriched dataset with Wikipedia plots >> results\preprocessing_summary.txt
+echo 4. Created combined text features >> results\preprocessing_summary.txt
+echo. >> results\preprocessing_summary.txt
+echo Output Files: >> results\preprocessing_summary.txt
+echo - missing_values.png >> results\preprocessing_summary.txt
+echo - genre_distribution.png >> results\preprocessing_summary.txt
+echo - rating_distribution.png >> results\preprocessing_summary.txt
+echo - year_distribution.png >> results\preprocessing_summary.txt
+echo - overview_length.png >> results\preprocessing_summary.txt
+echo - enriched_tmdb_with_wiki.csv >> results\preprocessing_summary.txt
+
+# ============================================================
+# STEP 7: CREATE DATA SAMPLES FOR DOCUMENTATION
+# ============================================================
+# Extract sample data to show in your report
+
+cd scripts
+python -c "import pandas as pd; df = pd.read_csv('../data/tmdb_5000_movies.csv'); print('ORIGINAL TMDB SAMPLE'); print('='*80); print(df[['original_title', 'overview', 'genres']].head(3).to_string()); print('\n\n'); df_enriched = pd.read_csv('../data/enriched_tmdb_with_wiki.csv'); print('ENRICHED DATASET SAMPLE'); print('='*80); cols = ['original_title']; cols.append('detailed_plot' if 'detailed_plot' in df_enriched.columns else 'overview'); cols.append('soup' if 'soup' in df_enriched.columns else 'genres'); print(df_enriched[cols].head(3).to_string())" > ../results/data_samples.txt
+cd ..
+
+# ============================================================
+# STEP 8: CALCULATE PREPROCESSING STATISTICS
+# ============================================================
+
+cd scripts
+python -c "import pandas as pd; df_base = pd.read_csv('../data/tmdb_5000_movies.csv'); df_enriched = pd.read_csv('../data/enriched_tmdb_with_wiki.csv'); plot_col = 'detailed_plot' if 'detailed_plot' in df_enriched.columns else 'overview'; base_avg = df_base['overview'].fillna('').str.len().mean(); enrich_avg = df_enriched[plot_col].fillna('').str.len().mean(); improvement = ((enrich_avg - base_avg) / base_avg * 100) if base_avg > 0 else 0; print('PREPROCESSING STATISTICS'); print('='*80); print(f'Total movies: {len(df_base)}'); print(f'Base avg plot length: {base_avg:.0f} characters'); print(f'Enriched avg plot length: {enrich_avg:.0f} characters'); print(f'Improvement: {improvement:.1f}%%'); missing_base = df_base['overview'].isna().sum(); missing_enrich = df_enriched[plot_col].isna().sum(); print(f'Missing plots (base): {missing_base}'); print(f'Missing plots (enriched): {missing_enrich}')" > ../results/preprocessing_stats.txt
+cd ..
+
+# ============================================================
+# STEP 9: VERIFY ALL OUTPUT FILES CREATED
+# ============================================================
+
+echo.
+echo Checking output files...
+echo.
+
+dir results\missing_values.png
+dir results\genre_distribution.png
+dir results\rating_distribution.png
+dir results\year_distribution.png
+dir results\overview_length.png
+dir results\preprocessing_summary.txt
+dir results\data_samples.txt
+dir results\preprocessing_stats.txt
+
+echo.
+echo Check complete! All files should be listed above.
+echo.
+
+# ============================================================
+# STEP 10: VIEW PREPROCESSING STATISTICS
+# ============================================================
+
+type results\preprocessing_stats.txt
+
+# This will show you the improvement statistics
+
+# ============================================================
+# STEP 11: OPEN RESULTS FOLDER
+# ============================================================
+
+explorer results
+
+# This opens the folder so you can view all generated files
+
+# ============================================================
+# TROUBLESHOOTING
+# ============================================================
+
+# If data_analysis.py doesn't exist:
+# - Check your /scripts folder
+# - You may need to create it (let me know if you need it)
+
+# If enrich_dataset.py fails:
+# - Make sure wiki_movie_plots_deduped.csv is in /data
+# - Check that the file name matches exactly
+# - Verify the CSV isn't corrupted (open it in Excel/Notepad)
+
+# If you get "module not found" errors:
+# - Run: pip install --upgrade pandas numpy matplotlib seaborn scikit-learn
+# - Make sure Python is added to PATH
+
+# If paths don't work:
+# - Make sure you're in the project root directory
+# - Use: cd C:\path\to\your\CineMatch_Project
+# - Then run the commands
+
+# If Wikipedia enrichment takes too long:
+# - This is normal! Processing 4800+ movies with fuzzy matching takes time
+# - Can take 10-30 minutes depending on your computer
+# - Don't close the terminal, let it finish
+
+# ============================================================
+# WHAT YOU SHOULD HAVE AFTER COMPLETION
+# ============================================================
+
+# In /results folder:
+# ✓ missing_values.png
+# ✓ genre_distribution.png
+# ✓ rating_distribution.png
+# ✓ year_distribution.png
+# ✓ overview_length.png
+# ✓ preprocessing_summary.txt
+# ✓ data_samples.txt
+# ✓ preprocessing_stats.txt
+
+# In /data folder:
+# ✓ enriched_tmdb_with_wiki.csv (NEW - the processed dataset)
+
+# ============================================================
+# QUICK RUN - ALL COMMANDS IN SEQUENCE
+# ============================================================
+
+# Copy and paste this entire block to run everything at once:
+
+pip install -r requirements.txt && cd scripts && python data_analysis.py && cd .. && move scripts\*.png results\ && cd scripts && python enrich_dataset.py && cd .. && move scripts\enriched_tmdb_with_wiki.csv data\ && cd scripts && python -c "import pandas as pd; df = pd.read_csv('../data/tmdb_5000_movies.csv'); print('ORIGINAL TMDB SAMPLE'); print('='*80); print(df[['original_title', 'overview', 'genres']].head(3).to_string()); print('\n\n'); df_enriched = pd.read_csv('../data/enriched_tmdb_with_wiki.csv'); print('ENRICHED DATASET SAMPLE'); print('='*80); cols = ['original_title']; cols.append('detailed_plot' if 'detailed_plot' in df_enriched.columns else 'overview'); cols.append('soup' if 'soup' in df_enriched.columns else 'genres'); print(df_enriched[cols].head(3).to_string())" > ../results/data_samples.txt && python -c "import pandas as pd; df_base = pd.read_csv('../data/tmdb_5000_movies.csv'); df_enriched = pd.read_csv('../data/enriched_tmdb_with_wiki.csv'); plot_col = 'detailed_plot' if 'detailed_plot' in df_enriched.columns else 'overview'; base_avg = df_base['overview'].fillna('').str.len().mean(); enrich_avg = df_enriched[plot_col].fillna('').str.len().mean(); improvement = ((enrich_avg - base_avg) / base_avg * 100) if base_avg > 0 else 0; print('PREPROCESSING STATISTICS'); print('='*80); print(f'Total movies: {len(df_base)}'); print(f'Base avg plot length: {base_avg:.0f} characters'); print(f'Enriched avg plot length: {enrich_avg:.0f} characters'); print(f'Improvement: {improvement:.1f}%%'); missing_base = df_base['overview'].isna().sum(); missing_enrich = df_enriched[plot_col].isna().sum(); print(f'Missing plots (base): {missing_base}'); print(f'Missing plots (enriched): {missing_enrich}')" > ../results/preprocessing_stats.txt && cd .. && echo. && echo ===== PREPROCESSING COMPLETE ===== && echo. && type results\preprocessing_stats.txt && echo. && explorer results
+
+# ============================================================
+# COMPLETION CHECKLIST
+# ============================================================
+# 
+# After running all commands, verify:
+# ✓ 5 PNG visualization files in /results
+# ✓ 3 TXT summary files in /results
+# ✓ enriched_tmdb_with_wiki.csv in /data
+# ✓ No error messages in terminal
+# ✓ All PNG files can be opened and viewed
+# ✓ preprocessing_stats.txt shows improvement percentage
+# ✓ data_samples.txt has before/after examples
+# 
+# If all checked, DATA PREPROCESSING IS COMPLETE! ✓
+# 
+# Next step: Run evaluation (comprehensive_evaluation.py)
+# ============================================================

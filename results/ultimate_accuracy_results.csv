@@ -1,0 +1,3 @@
+Method,Model,P@1,P@3,P@5,P@10,MRR
+Baseline (Bi-encoder),all-mpnet-base-v2,40.0,60.0,65.0,70.0,0.5032509157509157
+Ultimate (Two-stage),msmarco + cross-encoder,35.0,55.00000000000001,55.00000000000001,70.0,0.46473901098901094

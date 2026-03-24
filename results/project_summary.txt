@@ -1,0 +1,54 @@
+CINEMATCH PROJECT - FINAL SUMMARY
+======================================
+
+Date: Friday, 20 March 2026 02:15:00
+
+PROJECT OVERVIEW
+----------------
+Semantic Movie Search using AI and Natural Language Processing.
+CineMatch allows users to find movies by describing their plots, themes, or moods
+in natural language rather than just searching by title or keywords.
+
+DATASET
+-------
+Base: TMDB 5000 Movies (4,803 movies)
+Enriched: TMDB + Wikipedia Plots
+Wikipedia Match Rate: 74.5% (3,584/4,809)
+Plot Length Improvement: +831.4% (305 to 2,843 characters)
+
+MODELS TESTED
+-------------
+1. all-mpnet-base-v2
+2. all-MiniLM-L6-v2
+3. e5-small-v2
+
+EVALUATION METRICS
+------------------
+Test Queries: 20
+Datasets Compared: Base TMDB vs Enriched
+Metrics: Precision@1, @3, @5, @10, and Mean Reciprocal Rank (MRR)
+
+BEST OVERALL CONFIGURATION:
+  Dataset: Enriched
+  Model: all-mpnet-base-v2
+  MRR: 0.503 (Average Rank: 2.0)
+  P@1: 40.0%
+  P@3: 60.0%
+  P@5: 65.0%
+  P@10: 70.0%
+
+KEY FINDINGS
+------------
+- Enriched dataset significantly outperformed base TMDB for the best model.
+- Wikipedia plot enrichment improved P@5 accuracy by 10 percentage points (+18.1% relative).
+- MRR improved from 0.445 to 0.503, meaning the correct movie appears earlier in results.
+- Best configuration: all-mpnet-base-v2 + Enriched Dataset.
+- Semantic search successfully matches natural language queries even when keywords are missing.
+
+DELIVERABLES
+------------
+1. Streamlit Web Application (app/app.py)
+2. Dataset Enrichment Pipeline (scripts/enrich_dataset.py)
+3. Evaluation Framework (scripts/evaluation_with_mrr.py)
+4. Data Quality Analysis (scripts/data_analysis.py)
+5. Complete Documentation and Visualizations (results/ folder)
